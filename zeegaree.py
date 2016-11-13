@@ -130,17 +130,18 @@ class SaveClass(QtGui.QMainWindow):
 
 class SystemTrayIcon(QtGui.QSystemTrayIcon):
 
-    def __init__(self, icon, parent=None):
+    def __init__(self, icon, parent=None, start_hidden=True):
         QtGui.QSystemTrayIcon.__init__(self, icon, parent)
         menu = QtGui.QMenu(parent)
 
         self.setContextMenu(menu)
-        self.showMainWindow = QtGui.QAction("Show", self, triggered = self.onShowMainWindow)
-        self.showMainWindow.setVisible(False)
 
-        self.hideMainWindow =QtGui.QAction("Hide", self)
-        self.hideMainWindow.setVisible(True)
+        self.showMainWindow = QtGui.QAction("Show", self, triggered = self.onShowMainWindow)
+        self.hideMainWindow = QtGui.QAction("Hide", self)
         self.hideMainWindow.triggered.connect(self.onHideMainWindow)
+
+        self.showMainWindow.setVisible(start_hidden)
+        self.hideMainWindow.setVisible(not start_hidden)
 
         self.stopwatchMenuTitle = QtGui.QAction("Stopwatch", self)
         self.stopwatchMenuTitle.setDisabled(True)
@@ -449,6 +450,8 @@ if __name__ == '__main__':
     if activated:
         sys.exit(0)
 
+    start_hidden = '--tray-icon' in sys.argv
+
     app = QtGui.QApplication(sys.argv)
     view = MainWindow()
     view.setSource(QtCore.QUrl(os.path.join(os.path.dirname(__file__),'main.qml')))
@@ -468,7 +471,7 @@ if __name__ == '__main__':
     ticking = Ticking()
     launcher = Launcher()
     somethingtosave = SaveClass()
-    trayicon = SystemTrayIcon(trayIcon)
+    trayicon = SystemTrayIcon(trayIcon, start_hidden=start_hidden)
     mainwindow = MainWindow()
 
     context = view.rootContext()
@@ -484,5 +487,8 @@ if __name__ == '__main__':
     view.show()
 
     listen_for_activation(APP_ID, view)
+
+    if start_hidden:
+        trayicon.onHideMainWindow()
 
     sys.exit(app.exec_())
