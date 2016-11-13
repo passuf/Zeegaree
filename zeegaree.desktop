@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Zeegaree
+Comment=Stopwatch, Timer and Time Management
+Exec=python /home/passuf/Zeegaree/zeegaree.py
+Icon=/home/passuf/Zeegaree/images/z_128.png
+Path=/home/passuf/Zeegaree/
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Utility;Application;
