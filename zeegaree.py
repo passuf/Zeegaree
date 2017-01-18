@@ -9,6 +9,8 @@ import datetime
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 
+import habit
+
 try:
     from gi.repository import Unity
     LAUNCHER = Unity.LauncherEntry.get_for_desktop_id("zeegaree.desktop")
@@ -74,6 +76,9 @@ class Notification(QtCore.QObject):
         notification.set_urgency(Notify.Urgency.CRITICAL)
         notification.show()
         subprocess.Popen(["paplay", timerSound])
+
+        habit.up_score(subject)
+
 
 class Ticking(QtCore.QObject):
     """ Ticking sound when doing work """
